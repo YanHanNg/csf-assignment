@@ -41,12 +41,14 @@ export class NewsCountriesComponent implements OnInit {
           //Check the Data of the Request, if more than 5 min has passed requery
           let currDate = new Date();
           let allowedDate = new Date(data.queryDate);
-          allowedDate.setMinutes(allowedDate.getMinutes() + 5);
+          allowedDate.setMinutes(allowedDate.getMinutes() + 1);
+
+          console.info('curr Date: ' + currDate);
+          console.info('allowedDate: '+ allowedDate);
           if(currDate < allowedDate)
           {
             console.info('Cached');
             this.topHeadLines = data;
-            console.info(this.topHeadLines.articles.length);
           }
           else
           {
@@ -101,6 +103,15 @@ export class NewsCountriesComponent implements OnInit {
             this.newsDB.saveTopHeadLines(this.topHeadLines);
           })
       })
+  }
+
+  updateSaveArticle(i: number) {
+    //this.topHeadLines.articles[i].saved = !this.topHeadLines.articles[i].saved;
+    if(this.topHeadLines.articles[i].saved === false)
+      this.topHeadLines.articles[i].saved = true;
+    else
+    this.topHeadLines.articles[i].saved = false;
+    this.newsDB.updateTopHeadLines(this.topHeadLines);
   }
 
 }

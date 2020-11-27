@@ -109,6 +109,17 @@ export class NewsDatabase extends Dexie {
         })
     }
 
+    // async saveTopHeadLines(thl: TopHeadline) : Promise<any> {
+    //     const resultsCount = await this.topHeadline.where('countryCode').equals(thl.countryCode)
+    //         .count()
+
+    //     if(resultsCount <= 0)
+    //         return await this.topHeadline.add(thl);
+    //     else
+    //         return await this.topHeadline.put(thl);
+
+    // }
+
     async saveTopHeadLines(thl: TopHeadline) : Promise<any> {
         const resultsCount = await this.topHeadline.where('countryCode').equals(thl.countryCode)
             .count()
@@ -116,8 +127,31 @@ export class NewsDatabase extends Dexie {
         if(resultsCount <= 0)
             return await this.topHeadline.add(thl);
         else
-            return await this.topHeadline.put(thl);
+        {
+            let existingRecord: TopHeadline = await this.topHeadline.where('countryCode').equals(thl.countryCode)
+                .toArray()
+                .then(data => {
+                    return data[0] as TopHeadline;
+                });
+            
+            existingRecord.queryDate = thl.queryDate;
+            if(thl.articles.length > 0)
+            {
+                for(let newArticle of thl.articles)
+                {
+                    existingRecord.articles.push(newArticle);
+                }
+            }
+            return await this.topHeadline.put(existingRecord);
+        }   
+    }
 
+    async updateTopHeadLines(thl: TopHeadline) : Promise<any> {
+        const resultsCount = await this.topHeadline.where('countryCode').equals(thl.countryCode)
+            .count()
+
+        if(resultsCount > 0)
+            return await this.topHeadline.put(thl);
     }
 
     async getTopHeadLines(countryCode: string) : Promise<TopHeadline> {
@@ -151,7 +185,7 @@ export class NewsDatabase extends Dexie {
             if(record.articles.length > 0)
                 record.articles = record.articles.filter(d => d.saved === true)
 
-            this.topHeadline.put(record);
+            return await this.topHeadline.put(record);
         }
     }
 }

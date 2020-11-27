@@ -3,19 +3,27 @@
         <h2>News From {{country}}</h2>
         <button class="btn btn-dark" [routerLink]="['/']">Back</button>
     </div>
-    <div class="div" *ngIf="topHeadLines.articles.length > 0">
-        <div class="row" *ngFor="let a of topHeadLines.articles">
-            <div class="media">
-                <img src="{{a.image}}" class="align-self-center mr-3" alt="alt" width="40%">
+    <div *ngIf="topHeadLines.articles.length > 0">
+        <div class="row" *ngFor="let a of topHeadLines.articles; let i = index">
+            <div class="jumbotron media">
+                <img src="{{a.image}}" class="align-self-start mr-3" alt="alt" width="50%">
                 <div class="media-body">
                   <h4 class="mt-0">{{a.title}}</h4>
-                  <hr>
                   <p>{{a.description}}</p>
                   <hr>
                   <p class="mb-0">{{a.content}}</p>
                   <hr>
-                  <small><span class="a-label">Author: </span>{{a.author}} <span class="a-label">Published: </span>{{a.publishedAt}} </small>
+                  <p>
+                      <small><span class="a-label">Author: </span>{{a.author}}</small>
+                  </p>
+                  <p>
+                    <small><span class="a-label">Published: </span>{{a.publishedAt}} </small>
+                  </p>
                   <a class="float-right" href="{{a.url}}">Link To Article</a>
+                  <div class="form-group form-check">
+                    <input type="checkbox" class="form-check-input" id="exampleCheck1" [checked]="a.saved" (change)="updateSaveArticle(i)">
+                    <label class="form-check-label" for="exampleCheck1">Save</label>
+                  </div>
                 </div>
             </div>
             <hr>
