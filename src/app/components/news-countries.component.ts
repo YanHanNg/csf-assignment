@@ -41,7 +41,7 @@ export class NewsCountriesComponent implements OnInit {
           //Check the Data of the Request, if more than 5 min has passed requery
           let currDate = new Date();
           let allowedDate = new Date(data.queryDate);
-          allowedDate.setMinutes(allowedDate.getMinutes() + 1);
+          allowedDate.setMinutes(allowedDate.getMinutes() + 5);
 
           console.info('curr Date: ' + currDate);
           console.info('allowedDate: '+ allowedDate);
