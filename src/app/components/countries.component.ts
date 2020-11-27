@@ -16,34 +16,36 @@ export class CountriesComponent implements OnInit {
 
   ngOnInit(): void {
 
-    //Check DB if there is any Countries
+    //Check DB if there is any Countries List
     this.newsDB.getSavedCountries()
       .then(data => {
-        this.countries = data
-        return data
-      })
-      .then(data => {
+        //Assign Data from DB to Countries Array
+        this.countries = data;
+
         if(this.countries.length === 0)
         {
           console.info('Fetching Countries from URL');
           this.http.get('https://restcountries.eu/rest/v2/all')
-          .toPromise()
-          .then(results => {
-            //@ts-ignore
-            for(let result of results)
-            {
-              let country: Countries = {
-                countryCode: result.alpha2Code,
-                name: result.name,
-                flag: result.flag
+            .toPromise()
+            .then(results => {
+              //@ts-ignore
+              for(let result of results)
+              {
+                let country: Countries = {
+                  countryCode: result.alpha2Code,
+                  name: result.name,
+                  flag: result.flag
+                }
+                this.countries.push(country);
               }
-              this.countries.push(country);
-            }
           })
           .then(data => {
             this.newsDB.saveCountries(this.countries);
           })
-         }
+        }
+      })
+      .catch(err => {
+        console.info(err);
       })
   }
 

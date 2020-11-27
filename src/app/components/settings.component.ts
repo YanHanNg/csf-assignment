@@ -21,7 +21,20 @@ export class SettingsComponent implements OnInit {
   addAPIKey() {
     this.newsDB.addApiKey(this.form.get('apiKey').value)
       .then(data => {
-        this.router.navigate(['/countries']);
+        this.router.navigate(['/']);
+      })
+      .catch(err => {
+        console.error('Error when adding APIKey:', err);
+      })
+  }
+
+  deleteAPIKey() {
+    this.newsDB.deleteApiKey(this.form.get('apiKey').value)
+      .then(data => {
+        this.router.navigate(['/']);
+      })
+      .catch(err => {
+        console.error('Error when deleting APIKey:', err);
       })
   }
 

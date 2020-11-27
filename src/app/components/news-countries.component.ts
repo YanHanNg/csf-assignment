@@ -14,18 +14,58 @@ export class NewsCountriesComponent implements OnInit {
   country: string;
   countryCode: string;
   apiKey: string;
-  topHeadLines: TopHeadline;
+  topHeadLines: TopHeadline = {
+    countryCode: '',
+    queryDate: new Date(),
+    articles: []
+  }
 
   constructor(private activatedRoute: ActivatedRoute, private http: HttpClient, private newsDB: NewsDatabase) { }
 
   ngOnInit(): void {
     this.country = this.activatedRoute.snapshot.params['country'];
     this.countryCode = this.activatedRoute.snapshot.params['countryCode'];
-    this.countryCode = this.countryCode.trim().toLowerCase();
+    //this.countryCode = this.countryCode.trim().toLowerCase();
 
+    this.newsDB.getTopHeadLines(this.countryCode)
+      .then(data => {
+        
+        if(data === null)
+        {
+          console.info('Fetching from URL');
+          this.getTopHeadlineFromURL();
+        }
+        else
+        {
+          console.info('Fetching from Database');
+          //Check the Data of the Request, if more than 5 min has passed requery
+          let currDate = new Date();
+          let allowedDate = new Date(data.queryDate);
+          allowedDate.setMinutes(allowedDate.getMinutes() + 5);
+          if(currDate < allowedDate)
+          {
+            console.info('Cached');
+            this.topHeadLines = data;
+            console.info(this.topHeadLines.articles.length);
+          }
+          else
+          {
+            console.info('Non Cached');
+            //Delete from Database then Requery
+            this.newsDB.deleteTopHeadLines(data.countryCode)
+              .then(data => {
+                console.info('Fetching from URL after Deleting from Cached');
+                this.getTopHeadlineFromURL();
+              })
+          }
+        }
+      })
+  }
+
+  getTopHeadlineFromURL() {
+    //Fetching API Key then Query
     this.newsDB.getApiKey()
       .then(apiKey => {
-        console.info(apiKey);
         return this.apiKey = apiKey;
       })
       .then(data => {
@@ -38,14 +78,13 @@ export class NewsCountriesComponent implements OnInit {
           .toPromise()
           .then(data => {
             this.topHeadLines = {
-              countryCode: this.country,
+              countryCode: this.countryCode,
               queryDate: new Date(),
               articles: []
             }
             //@ts-ignore
             for(let d  of data.articles)
             {
-              console.info(d);
               let article: Articles = {
                 sourceName: d.source.name,
                 author: d.author,
@@ -59,7 +98,7 @@ export class NewsCountriesComponent implements OnInit {
               }
               this.topHeadLines.articles.push(article);
             }
-            console.info(this.topHeadLines);
+            this.newsDB.saveTopHeadLines(this.topHeadLines);
           })
       })
   }

@@ -12,12 +12,16 @@ export class MainComponent implements OnInit {
   constructor(private newsDB: NewsDatabase, private router: Router) { }
 
   ngOnInit(): void {
-    this.newsDB.checkApiKey().then(data => {
-      if(data === true)
-        this.router.navigate(['/countries']);
-      else
-        this.router.navigate(['/settings']);
-    })
+    //Check if there is APIKey in the IndexedDB
+    this.newsDB.checkApiKey()
+      .then(data => {
+        if(data === true)
+          this.router.navigate(['/countries']);
+        else
+          this.router.navigate(['/settings']);
+      })
+      .catch(err => {
+        console.error('Error when fetching APIKey:', err);
+      })
   }
-
 }

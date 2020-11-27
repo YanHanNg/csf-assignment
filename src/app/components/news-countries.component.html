@@ -3,21 +3,26 @@
         <h2>News From {{country}}</h2>
         <button class="btn btn-dark" [routerLink]="['/']">Back</button>
     </div>
-    <div class="row" *ngFor="let a of topHeadLines.articles">
-        <div class="media">
-            <img src="{{a.image}}" class="align-self-center mr-3" alt="alt" width="40%">
-            <div class="media-body">
-              <h5 class="mt-0">{{a.title}}</h5>
-              <hr>
-              <p>{{a.description}}</p>
-              <hr>
-              <p class="mb-0">{{a.content}}</p>
-              <hr>
-              <small>Author: {{a.author}} Published: {{a.publishedAt}} </small>
-              <a class="float-right" href="{{a.url}}">Link To Article</a>
+    <div class="div" *ngIf="topHeadLines.articles.length > 0">
+        <div class="row" *ngFor="let a of topHeadLines.articles">
+            <div class="media">
+                <img src="{{a.image}}" class="align-self-center mr-3" alt="alt" width="40%">
+                <div class="media-body">
+                  <h4 class="mt-0">{{a.title}}</h4>
+                  <hr>
+                  <p>{{a.description}}</p>
+                  <hr>
+                  <p class="mb-0">{{a.content}}</p>
+                  <hr>
+                  <small><span class="a-label">Author: </span>{{a.author}} <span class="a-label">Published: </span>{{a.publishedAt}} </small>
+                  <a class="float-right" href="{{a.url}}">Link To Article</a>
+                </div>
             </div>
+            <hr>
         </div>
-        <hr>
+    </div>
+    <div class="div" *ngIf="topHeadLines.articles.length <= 0">
+        <h2 >There is no Top Headline Articles for {{country}}</h2>
     </div>
 </div>
 
