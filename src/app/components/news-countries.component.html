@@ -1,0 +1,24 @@
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2>News From {{country}}</h2>
+        <button class="btn btn-dark" [routerLink]="['/']">Back</button>
+    </div>
+    <div class="row" *ngFor="let a of topHeadLines.articles">
+        <div class="media">
+            <img src="{{a.image}}" class="align-self-center mr-3" alt="alt" width="40%">
+            <div class="media-body">
+              <h5 class="mt-0">{{a.title}}</h5>
+              <hr>
+              <p>{{a.description}}</p>
+              <hr>
+              <p class="mb-0">{{a.content}}</p>
+              <hr>
+              <small>Author: {{a.author}} Published: {{a.publishedAt}} </small>
+              <a class="float-right" href="{{a.url}}">Link To Article</a>
+            </div>
+        </div>
+        <hr>
+    </div>
+</div>
+
+

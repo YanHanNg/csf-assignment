@@ -1,0 +1,11 @@
+<h2>Settings</h2>
+<form [formGroup]="form">
+    <div class="form-group">
+      <label for="exampleInputEmail1">NewsAPI.org</label>
+      <input type="text" class="form-control" id="apikey" aria-describedby="apiHelp" formControlName="apiKey">
+      <small id="emailHelp" class="form-text text-muted">Please enter the API Key from newsapi.org</small>
+    </div>
+    <button class="btn btn-primary" [routerLink]="['/countries']">Back</button>
+    <button class="btn btn-danger" [disabled]="form.invalid">Delete</button>
+    <button class="btn btn-success" (click)="addAPIKey()" [disabled]="form.invalid">Add</button>
+  </form>

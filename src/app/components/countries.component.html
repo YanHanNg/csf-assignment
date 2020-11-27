@@ -1,0 +1,17 @@
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2>Countries</h2>
+        <button class="btn btn-primary" [routerLink]="['/settings']">Settings</button>
+    </div>
+    <div class="row">
+        <div class="col">
+            <ul class="list-group">
+                <a [routerLink]="['/topheadlinenews', c.name, c.countryCode ]" *ngFor="let c of countries; let i = index" class="list-group-item d-flex justify-content-between align-items-center">
+                  {{c.name}}
+                  <!-- <span class="badge badge-primary badge-pill"></span> -->
+                  <img src="{{c.flag}}" alt="countryflag" width="50px">
+                </a>
+            </ul>
+        </div>
+    </div>
+</div>
